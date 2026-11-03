@@ -1,5 +1,3 @@
-
-
 name: ECHO LOST - Android APK
 
 on:
@@ -27,7 +25,7 @@ jobs:
         with:
           accept-android-sdk-licenses: true
 
-            - name: Install Android SDK components
+      - name: Install Android SDK components
         run: |
           sdkmanager --sdk_root="$ANDROID_HOME" \
             "platform-tools" \
@@ -46,9 +44,9 @@ jobs:
       - name: Install Export Templates
         run: |
           wget -q https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
-          mkdir -p ~/.local/share/godot/export_templates/4.4.1.stable
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.4.1.stable"
           unzip -q Godot_v4.4.1-stable_export_templates.tpz -d templates
-          cp templates/templates/android* ~/.local/share/godot/export_templates/4.4.1.stable/
+          cp templates/templates/android* "$HOME/.local/share/godot/export_templates/4.4.1.stable/"
 
       - name: Create Android Debug Keystore
         run: |
@@ -63,12 +61,22 @@ jobs:
             -validity 10000 \
             -dname "CN=Android Debug,O=Android,C=US"
 
+      - name: Import Godot project
+        run: |
+          ./Godot_v4.4.1-stable_linux.x86_64 \
+            --headless \
+            --editor \
+            --path . \
+            --quit
+
       - name: Export Android APK
         env:
-          GODOT_ANDROID_KEYSTORE_DEBUG_PATH: ${{ env.HOME }}/../.android/debug.keystore
+          GODOT_ANDROID_KEYSTORE_DEBUG_PATH: ${{ github.workspace }}/.android/debug.keystore
           GODOT_ANDROID_KEYSTORE_DEBUG_USER: androiddebugkey
           GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
         run: |
+          mkdir -p .android
+          cp "$HOME/.android/debug.keystore" .android/debug.keystore
           ./Godot_v4.4.1-stable_linux.x86_64 \
             --headless \
             --path . \
