@@ -105,6 +105,14 @@ shape = SubResource("PlayerCapsule")
 position = Vector3(0, 0.7, 0)
 current = true
 
+[node name="Flashlight" type="SpotLight3D" parent="Player/Camera3D"]
+position = Vector3(0, 0, -0.2)
+light_energy = 2.0
+spot_range = 12.0
+spot_angle = 35.0
+shadow_enabled = false
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 rotation = Vector3(-0.7, 0.4, 0)
 light_energy = 0.35
+
