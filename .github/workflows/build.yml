@@ -1,9 +1,13 @@
 
 
 
-name: ECHO LOST - Android Diagnostic
+
+name: ECHO LOST - Android APK
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -38,14 +42,19 @@ jobs:
           unzip -q Godot_v4.4.1-stable_linux.x86_64.zip
           chmod +x Godot_v4.4.1-stable_linux.x86_64
 
-      - name: Install Godot Export Templates
+      - name: Install Export Templates
         run: |
           wget -q https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
           mkdir -p ~/.local/share/godot/export_templates/4.4.1.stable
           unzip -q Godot_v4.4.1-stable_export_templates.tpz -d templates
-          cp templates/templates/android* ~/.local/share/godot/export_templates/4.4.1.stable/ || true
+          cp templates/templates/android* ~/.local/share/godot/export_templates/4.4.1.stable/
 
-      - name: Diagnose Android Preset
+      - name: Export Android APK
         run: |
-          ./Godot_v4.4.1-stable_linux.x86_64 --headless --path . --export-release Android diagnostic.apk --verbose 2>&1 | tee export-log.txt
-          grep -i -E "error|invalid|configuration|preset" export-log.txt || true
+          ./Godot_v4.4.1-stable_linux.x86_64 --headless --path . --export-debug Android ECHO_LOST.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ECHO-LOST-APK
+          path: ECHO_LOST.apk
