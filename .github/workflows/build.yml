@@ -27,12 +27,15 @@ jobs:
         with:
           accept-android-sdk-licenses: true
 
-      - name: Install Android SDK
+            - name: Install Android SDK components
         run: |
           sdkmanager --sdk_root="$ANDROID_HOME" \
             "platform-tools" \
             "platforms;android-34" \
-            "build-tools;34.0.0"
+            "build-tools;34.0.0" \
+            "cmdline-tools;latest" \
+            "ndk;23.2.8568313" \
+            "cmake;3.10.2.4988404"
 
       - name: Install Godot
         run: |
