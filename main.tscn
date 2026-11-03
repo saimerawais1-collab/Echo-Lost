@@ -1,53 +1,75 @@
 
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://Player.gd" id="1_player"]
 
 [sub_resource type="BoxMesh" id="FloorMesh"]
 size = Vector3(10, 0.2, 10)
 
-[sub_resource type="StandardMaterial3D" id="FloorMaterial"]
-albedo_color = Color(0.12, 0.13, 0.15, 1)
-roughness = 1.0
+[sub_resource type="BoxShape3D" id="FloorShape"]
+size = Vector3(10, 0.2, 10)
 
 [sub_resource type="BoxMesh" id="WallMesh"]
 size = Vector3(10, 3, 0.2)
 
-[sub_resource type="StandardMaterial3D" id="WallMaterial"]
-albedo_color = Color(0.07, 0.08, 0.09, 1)
-roughness = 1.0
+[sub_resource type="BoxShape3D" id="WallShape"]
+size = Vector3(10, 3, 0.2)
 
 [node name="Main" type="Node3D"]
 
-[node name="Floor" type="MeshInstance3D" parent="."]
+[node name="Floor" type="StaticBody3D" parent="."]
 position = Vector3(0, -0.1, 0)
+
+[node name="FloorMesh" type="MeshInstance3D" parent="Floor"]
 mesh = SubResource("FloorMesh")
-material_override = SubResource("FloorMaterial")
 
-[node name="BackWall" type="MeshInstance3D" parent="."]
+[node name="FloorCollision" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("FloorShape")
+
+[node name="BackWall" type="StaticBody3D" parent="."]
 position = Vector3(0, 1.5, -5)
-mesh = SubResource("WallMesh")
-material_override = SubResource("WallMaterial")
 
-[node name="FrontWall" type="MeshInstance3D" parent="."]
+[node name="Mesh" type="MeshInstance3D" parent="BackWall"]
+mesh = SubResource("WallMesh")
+
+[node name="Collision" type="CollisionShape3D" parent="BackWall"]
+shape = SubResource("WallShape")
+
+[node name="FrontWall" type="StaticBody3D" parent="."]
 position = Vector3(0, 1.5, 5)
-mesh = SubResource("WallMesh")
-material_override = SubResource("WallMaterial")
 
-[node name="LeftWall" type="MeshInstance3D" parent="."]
+[node name="Mesh" type="MeshInstance3D" parent="FrontWall"]
+mesh = SubResource("WallMesh")
+
+[node name="Collision" type="CollisionShape3D" parent="FrontWall"]
+shape = SubResource("WallShape")
+
+[node name="LeftWall" type="StaticBody3D" parent="."]
 position = Vector3(-5, 1.5, 0)
 rotation = Vector3(0, 1.5708, 0)
-mesh = SubResource("WallMesh")
-material_override = SubResource("WallMaterial")
 
-[node name="RightWall" type="MeshInstance3D" parent="."]
+[node name="Mesh" type="MeshInstance3D" parent="LeftWall"]
+mesh = SubResource("WallMesh")
+
+[node name="Collision" type="CollisionShape3D" parent="LeftWall"]
+shape = SubResource("WallShape")
+
+[node name="RightWall" type="StaticBody3D" parent="."]
 position = Vector3(5, 1.5, 0)
 rotation = Vector3(0, 1.5708, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="RightWall"]
 mesh = SubResource("WallMesh")
-material_override = SubResource("WallMaterial")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-position = Vector3(0, 1.6, 4)
+[node name="Collision" type="CollisionShape3D" parent="RightWall"]
+shape = SubResource("WallShape")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+position = Vector3(0, 0.9, 3)
+script = ExtResource("1_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+position = Vector3(0, 0.7, 0)
 current = true
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-rotation = Vector3(-0.7, 0.4, 0)
-light_energy = 0.5
