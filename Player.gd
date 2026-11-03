@@ -14,6 +14,7 @@ var movement_touch_position: Vector2 = Vector2.ZERO
 
 @onready var camera: Camera3D = $Camera3D
 @onready var flashlight: SpotLight3D = $Camera3D/Flashlight
+@onready var resonance_light: SpotLight3D = $Camera3D/ResonanceLight
 
 
 func _ready() -> void:
@@ -23,8 +24,11 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
     if event is InputEventKey:
-        if event.pressed and not event.echo and event.keycode == KEY_F:
-            _toggle_flashlight()
+        if event.pressed and not event.echo:
+            if event.keycode == KEY_F:
+                flashlight.visible = not flashlight.visible
+            elif event.keycode == KEY_R:
+                resonance_light.visible = not resonance_light.visible
 
     elif event is InputEventMouseMotion:
         if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
@@ -34,10 +38,14 @@ func _input(event: InputEvent) -> void:
         if event.pressed:
             var screen_size = get_viewport().get_visible_rect().size
 
-            # Tap upper-right corner to toggle flashlight
             if event.position.x > screen_size.x * 0.8 \
             and event.position.y < screen_size.y * 0.2:
-                _toggle_flashlight()
+                flashlight.visible = not flashlight.visible
+                return
+
+            if event.position.x > screen_size.x * 0.7 \
+            and event.position.y > screen_size.y * 0.7:
+                resonance_light.visible = not resonance_light.visible
                 return
 
             if event.position.x < screen_size.x * 0.5:
@@ -61,10 +69,6 @@ func _input(event: InputEvent) -> void:
             movement_touch_position = event.position
         elif event.index == look_touch_id:
             _look(event.relative)
-
-
-func _toggle_flashlight() -> void:
-    flashlight.visible = not flashlight.visible
 
 
 func _look(relative: Vector2) -> void:
