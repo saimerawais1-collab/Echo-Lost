@@ -130,8 +130,28 @@ func _get_movement_input() -> Vector2:
 	return input_direction.limit_length(1.0)
 
 
+
 func _interact() -> void:
+	var space_state = get_world_3d().direct_space_state
+
+	var query = PhysicsRayQueryParameters3D.create(
+		camera.global_position,
+		camera.global_position - camera.global_transform.basis.z * 3.0
+	)
+
+	query.exclude = [self]
+
+	var result = space_state.intersect_ray(query)
+
+	if result:
+		var target = result.collider
+
+		if target.has_method("interact"):
+			target.interact(self)
+			return
+
 	objective_label.text = "Nothing to interact with nearby."
+
 
 
 func _physics_process(delta: float) -> void:
