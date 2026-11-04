@@ -13,56 +13,50 @@ var is_paused: bool = false
 
 
 func _ready() -> void:
-	add_to_group("GameManager")
+    add_to_group("GameManager")
 
-	# Connect mobile HUD controls
-	if ui and player:
-		ui.flashlight_pressed.connect(player.toggle_flashlight)
-		ui.resonance_pressed.connect(player.toggle_resonance)
-		ui.interact_pressed.connect(player.interact)
+    ui.flashlight_pressed.connect(player.toggle_flashlight)
+    ui.resonance_pressed.connect(player.toggle_resonance)
+    ui.interact_pressed.connect(player.interact)
+    ui.pause_pressed.connect(toggle_pause)
+    ui.resume_pressed.connect(resume_game)
+    ui.restart_pressed.connect(restart_game)
 
-	# Connect objective updates to HUD
-	if objective_manager and ui:
-		objective_manager.objective_changed.connect(ui.set_objective)
-
-	# Connect pause menu controls
-	if ui:
-		ui.resume_pressed.connect(resume_game)
-		ui.restart_pressed.connect(restart_game)
+    objective_manager.objective_changed.connect(ui.set_objective)
 
 
 func show_message(message: String) -> void:
-	if ui:
-		ui.show_message(message)
+    ui.show_message(message)
+
+
+func toggle_pause() -> void:
+    if is_paused:
+        resume_game()
+    else:
+        pause_game()
 
 
 func pause_game() -> void:
-	if is_paused:
-		return
+    if is_paused:
+        return
 
-	is_paused = true
-	get_tree().paused = true
-	game_paused.emit()
+    is_paused = true
+    ui.set_pause_state(true)
+    get_tree().paused = true
+    game_paused.emit()
 
 
 func resume_game() -> void:
-	if not is_paused:
-		return
+    if not is_paused:
+        return
 
-	is_paused = false
-	get_tree().paused = false
-	game_resumed.emit()
+    is_paused = false
+    ui.set_pause_state(false)
+    get_tree().paused = false
+    game_resumed.emit()
 
 
 func restart_game() -> void:
-	is_paused = false
-	get_tree().paused = false
-	get_tree().reload_current_scene()
-
-
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
-		if is_paused:
-			resume_game()
-		else:
-			pause_game()
+    is_paused = false
+    get_tree().paused = false
+    get_tree().reload_current_scene()
