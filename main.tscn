@@ -1,6 +1,5 @@
 
-
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://scripts/GameManager.gd" id="1_game"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="2_player"]
@@ -35,7 +34,7 @@ height = 1.8
 size = Vector3(0.5, 0.5, 0.15)
 
 [sub_resource type="BoxShape3D" id="ObjectShape"]
-size = Vector3(0.5, 0.5, 0.15]
+size = Vector3(0.5, 0.5, 0.15)
 
 [sub_resource type="Environment" id="Environment"]
 background_mode = 1
@@ -265,3 +264,43 @@ offset_top = 170.0
 offset_right = 230.0
 offset_bottom = 220.0
 text = "RESTART"
+
+[node name="MaraPhoto" type="StaticBody3D" parent="."]
+position = Vector3(0, 1.2, 4)
+script = ExtResource("6_interactable")
+item_name = "Mara's Photograph"
+description = "Mara stands beside Elias. On the back: You promised."
+objective_id = "find_photo"
+
+[node name="Mesh" type="MeshInstance3D" parent="MaraPhoto"]
+mesh = SubResource("ObjectMesh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MaraPhoto"]
+shape = SubResource("ObjectShape")
+
+[node name="AudioRecorder" type="StaticBody3D" parent="."]
+position = Vector3(1, 0.8, 0)
+script = ExtResource("6_interactable")
+item_name = "Old Audio Recorder"
+description = "A recording whispers: If you ever find me again... let me go."
+objective_id = "find_recorder"
+
+[node name="Mesh" type="MeshInstance3D" parent="AudioRecorder"]
+mesh = SubResource("ObjectMesh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AudioRecorder"]
+shape = SubResource("ObjectShape")
+
+[node name="HiddenMemory" type="StaticBody3D" parent="."]
+position = Vector3(-1, 1.2, -4)
+script = ExtResource("6_interactable")
+item_name = "Hidden Memory"
+description = "You always wanted to fix everything."
+resonance_only = true
+objective_id = "activate_echo"
+
+[node name="Mesh" type="MeshInstance3D" parent="HiddenMemory"]
+mesh = SubResource("ObjectMesh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HiddenMemory"]
+shape = SubResource("ObjectShape")
