@@ -6,25 +6,34 @@ signal game_paused
 signal game_resumed
 
 var is_paused: bool = false
-var message_timer: float = 0.0
 
 @onready var ui: UIManager = $HUD
-@onready var player: CharacterBody3D = $Player
+@onready var player: HorrorPlayer = $Player
+@onready var objective_manager: ObjectiveManager = $ObjectiveManager
 
 
 func _ready() -> void:
 	add_to_group("GameManager")
 
-	ui.flashlight_pressed.connect(player.toggle_flashlight)
-	ui.resonance_pressed.connect(player.toggle_resonance)
-	ui.interact_pressed.connect(player.interact)
+	# Connect mobile HUD controls
+	if ui and player:
+		ui.flashlight_pressed.connect(player.toggle_flashlight)
+		ui.resonance_pressed.connect(player.toggle_resonance)
+		ui.interact_pressed.connect(player.interact)
 
-	var objectives = $ObjectiveManager
-	objectives.objective_changed.connect(ui.set_objective)
+	# Connect objective updates to HUD
+	if objective_manager and ui:
+		objective_manager.objective_changed.connect(ui.set_objective)
+
+	# Connect pause menu controls
+	if ui:
+		ui.resume_pressed.connect(resume_game)
+		ui.restart_pressed.connect(restart_game)
 
 
 func show_message(message: String) -> void:
-	ui.show_message(message)
+	if ui:
+		ui.show_message(message)
 
 
 func pause_game() -> void:
@@ -46,5 +55,14 @@ func resume_game() -> void:
 
 
 func restart_game() -> void:
+	is_paused = false
 	get_tree().paused = false
 	get_tree().reload_current_scene()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		if is_paused:
+			resume_game()
+		else:
+			pause_game()
