@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/InteractionManager.gd" id="3_interaction"]
 [ext_resource type="Script" path="res://scripts/ObjectiveManager.gd" id="4_objectives"]
 [ext_resource type="Script" path="res://scripts/UIManager.gd" id="5_ui"]
+[ext_resource type="Script" path="res://scripts/Interactable.gd" id="6_interactable"]
 
 [sub_resource type="BoxMesh" id="FloorMesh"]
 size = Vector3(10, 0.2, 20)
