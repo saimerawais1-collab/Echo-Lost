@@ -1,14 +1,15 @@
 
 
+
 [gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_player"]
 
 [sub_resource type="BoxMesh" id="FloorMesh"]
-size = Vector3(10, 0.2, 10)
+size = Vector3(10, 0.2, 20)
 
 [sub_resource type="BoxShape3D" id="FloorShape"]
-size = Vector3(10, 0.2, 10)
+size = Vector3(10, 0.2, 20)
 
 [sub_resource type="BoxMesh" id="WallMesh"]
 size = Vector3(10, 3, 0.2)
@@ -21,21 +22,21 @@ radius = 0.35
 height = 1.8
 
 [sub_resource type="StandardMaterial3D" id="FloorMaterial"]
-albedo_color = Color(0.12, 0.13, 0.15, 1)
+albedo_color = Color(0.09, 0.1, 0.12, 1)
 roughness = 1.0
 
 [sub_resource type="StandardMaterial3D" id="WallMaterial"]
-albedo_color = Color(0.07, 0.08, 0.09, 1)
+albedo_color = Color(0.035, 0.045, 0.055, 1)
 roughness = 1.0
 
 [sub_resource type="Environment" id="Environment"]
 background_mode = 1
-background_color = Color(0.015, 0.02, 0.03, 1)
+background_color = Color(0.005, 0.008, 0.015, 1)
 ambient_light_source = 1
-ambient_light_color = Color(0.18, 0.2, 0.24, 1)
-ambient_light_energy = 0.4
+ambient_light_color = Color(0.12, 0.15, 0.2, 1)
+ambient_light_energy = 0.35
 fog_enabled = true
-fog_light_color = Color(0.08, 0.09, 0.12, 1)
+fog_light_color = Color(0.04, 0.06, 0.09, 1)
 fog_density = 0.025
 
 [node name="Main" type="Node3D"]
@@ -43,7 +44,7 @@ fog_density = 0.025
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment")
 
-[node name="Floor" type="StaticBody3D" parent="."]
+[node name="Floor" type="StaticBody3D" parent.]
 position = Vector3(0, -0.1, 0)
 
 [node name="FloorMesh" type="MeshInstance3D" parent="Floor"]
@@ -54,7 +55,7 @@ material_override = SubResource("FloorMaterial")
 shape = SubResource("FloorShape")
 
 [node name="BackWall" type="StaticBody3D" parent="."]
-position = Vector3(0, 1.5, -5)
+position = Vector3(0, 1.5, -10)
 
 [node name="Mesh" type="MeshInstance3D" parent="BackWall"]
 mesh = SubResource("WallMesh")
@@ -64,7 +65,7 @@ material_override = SubResource("WallMaterial")
 shape = SubResource("WallShape")
 
 [node name="FrontWall" type="StaticBody3D" parent="."]
-position = Vector3(0, 1.5, 5)
+position = Vector3(0, 1.5, 10)
 
 [node name="Mesh" type="MeshInstance3D" parent="FrontWall"]
 mesh = SubResource("WallMesh")
@@ -96,7 +97,7 @@ material_override = SubResource("WallMaterial")
 shape = SubResource("WallShape")
 
 [node name="Player" type="CharacterBody3D" parent="."]
-position = Vector3(0, 0.9, 3)
+position = Vector3(0, 0.9, 7)
 script = ExtResource("1_player")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
@@ -108,20 +109,109 @@ current = true
 
 [node name="Flashlight" type="SpotLight3D" parent="Player/Camera3D"]
 position = Vector3(0, 0, -0.2)
-light_energy = 2.0
-spot_range = 12.0
-spot_angle = 35.0
+light_energy = 4.5
+spot_range = 18.0
+spot_angle = 50.0
 shadow_enabled = false
 
 [node name="ResonanceLight" type="SpotLight3D" parent="Player/Camera3D"]
 position = Vector3(0, 0, -0.2)
 light_color = Color(0.1, 0.8, 1.0, 1)
-light_energy = 3.0
-spot_range = 10.0
+light_energy = 3.5
+spot_range = 12.0
 spot_angle = 45.0
 visible = false
 shadow_enabled = false
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 rotation = Vector3(-0.7, 0.4, 0)
-light_energy = 0.35
+light_energy = 0.25
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Crosshair" type="Label" parent="HUD"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -18.0
+offset_right = 10.0
+offset_bottom = 18.0
+text = "+"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 28
+
+[node name="ObjectiveLabel" type="Label" parent="HUD"]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 420.0
+offset_bottom = 60.0
+text = "OBJECTIVE: Find a way out"
+theme_override_colors/font_color = Color(0.65, 0.85, 0.95, 1)
+theme_override_font_sizes/font_size = 20
+
+[node name="JoystickBase" type="Panel" parent="HUD"]
+anchors_preset = 7
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+offset_left = 35.0
+offset_top = -190.0
+offset_right = 175.0
+offset_bottom = -50.0
+mouse_filter = 1
+
+[node name="JoystickLabel" type="Label" parent="HUD/JoystickBase"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 45.0
+offset_right = 140.0
+offset_bottom = 95.0
+text = "MOVE"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 20
+
+[node name="FlashlightButton" type="Button" parent="HUD"]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -190.0
+offset_top = -190.0
+offset_right = -100.0
+offset_bottom = -100.0
+text = "LIGHT"
+theme_override_font_sizes/font_size = 18
+
+[node name="ResonanceButton" type="Button" parent="HUD"]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -95.0
+offset_top = -290.0
+offset_right = -5.0
+offset_bottom = -200.0
+text = "ECHO"
+theme_override_colors/font_color = Color(0.2, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 18
+
+[node name="InteractButton" type="Button" parent="HUD"]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -190.0
+offset_top = -290.0
+offset_right = -100.0
+offset_bottom = -200.0
+text = "USE"
+theme_override_font_sizes/font_size = 18
